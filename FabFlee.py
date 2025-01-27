@@ -28,7 +28,6 @@ add_local_paths("FabFlee")
 
 # Import conflicts
 
-
 @task
 @load_plugin_env_vars("FabFlee")
 # Syntax: fabsim localhost get_flee_location
@@ -485,67 +484,7 @@ def plot_output(output_dir="", graphs_dir=""):
              env.local_results, output_dir, graphs_dir))
     '''
 
-
-@task
-@load_plugin_env_vars("FabFlee")
-def create_agents_video(output_dir=""):
-    """
-    Generate PNGs and videos for links based on simulation outputs.
-    """
-    import sys
-    from flee.postprocessing.video_agents import process_files
-
-    try:
-        # Create directories if they do not exist
-        local("mkdir -p %s/%s" % (env.local_results, output_dir))
-
-        # Dynamically add flee.postprocessing path for imports
-        for p in env.flee_location.split(":"):
-            sys.path.insert(0, p)
-
-        # Absolute path to the output directory
-        full_output_dir = os.path.join(env.local_results, output_dir)
-
-        print(f"Processing agents PNGs and videos in directory: {full_output_dir}")
-        
-        # Call the PNG and video generation function from the script
-        process_files(full_output_dir)
-        
-        print(f"Agents PNGs and video successfully generated in: {full_output_dir}")
-    except Exception as e:
-        print(f"Error occurred in process_agents_output: {traceback.format_exc()}")
-
-
-@task
-@load_plugin_env_vars("FabFlee")
-def create_links_video(output_dir=""):
-    """
-    Generate PNGs and videos for links based on simulation outputs.
-    """
-    import sys
-    from flee.postprocessing.video_links import process_files
-
-    try:
-        # Create directories if they do not exist
-        local("mkdir -p %s/%s" % (env.local_results, output_dir))
-
-        # Dynamically add flee.postprocessing path for imports
-        for p in env.flee_location.split(":"):
-            sys.path.insert(0, p)
-
-        # Absolute path to the output directory
-        full_output_dir = os.path.join(env.local_results, output_dir)
-
-        print(f"Processing links PNGs and videos in directory: {full_output_dir}")
-        
-        # Call the PNG and video generation function from the script
-        process_files(full_output_dir)
-        
-        print(f"Links PNGs and video successfully generated in: {full_output_dir}")
-    except Exception as e:
-        print(f"Error occurred in process_links_output: {traceback.format_exc()}")
-
-
+    
 @task
 @load_plugin_env_vars("FabFlee")
 # Syntax: fabsim localhost flee_compare:<model#1>,<model#2>,...,,model#n>
@@ -562,7 +501,8 @@ def flee_compare(*models,output_dir=""):
     from flee.postprocessing.plot_flee_compare import plot_flee_compare
     plot_flee_compare(*models,data_dir=env.local_results,output_dir=output_dir)
     
-    
+
+
 @task
 @load_plugin_env_vars("FabFlee")
 # Syntax: fabsim localhost plot_forecast:flee_conflict_name_localhost_16(,graphs_dir_name)
@@ -921,7 +861,7 @@ def validate_flee(config='validation', simulation_period=0, cores=4, skip_runs=F
     results_dir = template(env.job_name_template)
     validate_flee_output(results_dir, mode)
 
-
+''' MOVED TO CONSTRUCT.PY
 @task
 @load_plugin_env_vars("FabFlee")
 # Syntax: fabsim localhost new_conflict:<config_name>
@@ -964,7 +904,7 @@ def new_conflict(config, **args):
                    "%s/config_files/%s/input_csv")
           % (env.flee_location, get_plugin_path("FabFlee"), config))
 
-
+'''
 # ACLED data extraction task
 
 @task
@@ -1026,7 +966,7 @@ def extract_conflict_file(config, simulation_period, **args):
         output_file=os.path.join(config_dir, "input_csv", "conflicts.csv"),
     )
 
-
+''' MOVED TO CONSTRUCT.PY
 @task
 @load_plugin_env_vars("FabFlee")
 # Syntax: fabsim localhost add_population:<config_name>
@@ -1057,9 +997,10 @@ def add_population(config, PL="100", CL="100", **args):
              config
              )
           )
-
+'''
 # FabFlee execution tasks
 
+''' MOVED TO CONSTRUCT.PY
 @task
 # Syntax: fabsim localhost load_conflict:<conflict_name>
 def load_conflict(conflict_name):
@@ -1100,8 +1041,8 @@ def load_conflict(conflict_name):
     with open("%s/conflict_data/active_conflict/commands.log.txt"
               % (get_plugin_path("FabFlee")), "a") as myfile:
         myfile.write("fab localhost load_conflict:%s\n" % conflict_name)
-
-
+'''
+''' MOVED TO CONSTRUCT.PY
 @task
 # Syntax: fabsim localhost instantiate:conflict_name
 def instantiate(conflict_name):
@@ -1154,8 +1095,9 @@ def instantiate(conflict_name):
         %s/config_files/%s/simsetting.csv")
           % (get_plugin_path("FabFlee"), get_plugin_path("FabFlee"),
              conflict_name))
+'''
 
-
+''' MOVED TO CONSTRUCT.PY
 @task
 # Syntax: fabsim localhost clear_active_conflict
 def clear_active_conflict():
@@ -1166,8 +1108,9 @@ def clear_active_conflict():
     local(template("rm -rf %s/conflict_data/active_conflict/"
                    % (get_plugin_path("FabFlee"))))
 
-
+'''
 # FabFlee refinement tasks
+''' MOVED TO CONSTRUCT.PY
 @task
 # Syntax: fabsim localhost change_capacities:camp_name=capacity(,camp_name2=capacity2)
 def change_capacities(**capacities):
@@ -1207,8 +1150,9 @@ def change_capacities(**capacities):
     writer = csv.writer(open("%s/conflict_data/active_conflict/locations.csv"
                              % (get_plugin_path("FabFlee")), "w"))
     writer.writerows(lines)
+'''
 
-
+''' MOVED TO CONSTRUCT.PY
 @task
 # Syntax: fabsim localhost find_capacity:<csv_name>
 def find_capacity(csv_name):
@@ -1222,8 +1166,9 @@ def find_capacity(csv_name):
                     % (get_plugin_path("FabFlee"), csv_name)).readlines()
     print(max(((i, int(l.split(',')[1])) for i, l in enumerate(
         csv_file)), key=lambda t: t[1])[1])
+'''
 
-
+'''  MOVED TO CONSTRUCT.PY
 @task
 # Syntax: fabsim localhost add_camp:camp_name,region,country(,lat,lon)
 def add_camp(camp_name, region=" ", country=" ", lat=0.0, lon=0.0):
@@ -1257,8 +1202,9 @@ def add_camp(camp_name, region=" ", country=" ", lat=0.0, lon=0.0):
         writer = csv.writer(new_csv)
         writer.writerow(add_camp)
     print(add_camp)
+'''
 
-
+''' MOVED TO CONSTRUCT.PY
 @task
 # Syntax: fabsim localhost add_new_link:<name1>,<name2>,<distance>
 def add_new_link(name1, name2, distance):
@@ -1292,8 +1238,9 @@ def add_new_link(name1, name2, distance):
         writer = csv.writer(new_csv)
         writer.writerow(add_new_link)
     print(add_new_link)
+'''
 
-
+''' MOVED TO CONSTRUCT.PY
 @task
 # Syntax: fabsim localhost delete_location:<location_name>
 def delete_location(location_name):
@@ -1329,8 +1276,8 @@ def delete_location(location_name):
         print("Warning: camp %s is deleted from locations.csv."
               % (location_name))
         return
-
-
+'''
+''' MOVED TO CONSTRUCT.PY
 @task
 # Syntax: fabsim localhost change_distance:name1,name2,distance
 def change_distance(source, destination, distance):
@@ -1362,8 +1309,9 @@ def change_distance(source, destination, distance):
     writer = csv.writer(open("%s/conflict_data/active_conflict/routes.csv"
                              % (get_plugin_path("FabFlee")), "w"))
     writer.writerows(lines)
+'''
 
-
+''' MOVED TO CONSTRUCT.PY
 @task
 # Syntax: fabsim localhost close_camp:camp_name,country(,closure_start,closure_end)
 def close_camp(camp_name, country, closure_start=0, closure_end=-1):
@@ -1405,8 +1353,8 @@ def close_camp(camp_name, country, closure_start=0, closure_end=-1):
     writer = csv.writer(open("%s/conflict_data/active_conflict/closures.csv"
                              % (get_plugin_path("FabFlee")), "w"))
     writer.writerows(lines)
-
-
+'''
+''' MOVED TO CONSTRUCT.PY
 @task
 # Syntax: fabsim localhost close_border:country1,country2(,closure_start,closure_end)
 def close_border(country1, country2, closure_start=0, closure_end=-1):
@@ -1445,20 +1393,21 @@ def close_border(country1, country2, closure_start=0, closure_end=-1):
         lines.append(["country", country1, country2,
                       closure_start, closure_end])
 
-    '''
+    """
     local(template("cp %s/conflict_data/%s/*.csv \
         %s/conflict_data/active_conflict/")
           % (get_plugin_path("FabFlee"), conflict_name,
              get_plugin_path("FabFlee")))
     print(lines)
-    '''
+    """
 
     # 2. Write the updated closures.csv in the active_conflict directory.
     writer = csv.writer(open("%s/conflict_data/active_conflict/closures.csv"
                              % (get_plugin_path("FabFlee")), "w"))
     writer.writerows(lines)
+'''
 
-
+''' MOVED TO CONSTRUCT.PY
 @task
 # Syntax: fabsim localhost redirect:location_name1,location_name2
 def redirect(source, destination):
@@ -1468,7 +1417,7 @@ def redirect(source, destination):
 
     with open("%s/conflict_data/active_conflict/commands.log.txt"
               % (get_plugin_path("FabFlee")), "a") as myfile:
-        myfile.write("fab localhost redirect:%s,%s\n" % (source, destination))
+        myfile.write("fabsim localhost redirect:%s,%s\n" % (source, destination))
 
     # 1. Read locations.csv and for each location in the dict, find in the csv,
     # and redirect refugees from location in neighbouring country to camp.
@@ -1516,7 +1465,7 @@ def redirect(source, destination):
     writer = csv.writer(open("%s/conflict_data/active_conflict/routes.csv"
                              % (get_plugin_path("FabFlee")), "w"))
     writer.writerows(lines)
-
+'''
 
 # Test Functions
 # from plugins.FabFlee.test_FabFlee import *
@@ -1589,4 +1538,18 @@ except:
     import traceback
     traceback.print_tb(exc_traceback)
     print("The FabFlee run_perf_benchmarks functionalities are not imported as a result.")
+    pass
+
+try:
+    # # loads Validation and Verification Patterns (VVP) tasks
+    from plugins.FabFlee.construct import clear_active_conflict
+    
+except:
+    exc_type, exc_value, exc_traceback = sys.exc_info()
+    print("Error: failed to import module construct.py")
+    pprint(exc_type)
+    pprint(exc_value)
+    import traceback
+    traceback.print_tb(exc_traceback)
+    print("The FabFlee construct functionalities are not imported as a result.")
     pass
