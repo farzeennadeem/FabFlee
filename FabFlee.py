@@ -8,21 +8,21 @@
 
 try:
     from fabsim.base.fab import *
-except ImportError:
+except ImportError as e:
     print("ERROR: Cannot import fabsim.base.fab:", e)
     from fabsim.base.fab import *
 
 # Import V&V primitives.
 try:
     import fabsim.VVP.vvp as vvp
-except ImportError:
+except ImportError as e:
     print("ERROR: Cannot import fabsim.VVP.vvp:", e)
     import fabsim.VVP.vvp as vvp
 
 try:
     # # loads construct.py tasks
     from plugins.FabFlee.construct import *    
-except ImportError:
+except ImportError as e:
     print("ERROR: Cannot import construct.py from FabFlee:", e)
     from plugins.FabFlee.construct import *
 
