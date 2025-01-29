@@ -1,13 +1,18 @@
 try:
     from fabsim.base.fab import *
 except ImportError:
-    from base.fab import *
+    from fabsim.base.fab import *
 
 # Import V&V primitives.
 try:
     import fabsim.VVP.vvp as vvp
 except ImportError:
-    import VVP.vvp as vvp
+    import fabsim.VVP.vvp as vvp
+
+try:
+    from FabFlee import *
+except ImportError:
+    from FabFlee import *
 
 import glob
 import csv

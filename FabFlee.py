@@ -9,19 +9,21 @@
 try:
     from fabsim.base.fab import *
 except ImportError:
-    from base.fab import *
+    from fabsim.base.fab import *
 
 # Import V&V primitives.
 try:
     import fabsim.VVP.vvp as vvp
 except ImportError:
-    import VVP.vvp as vvp
+    import fabsim.VVP.vvp as vvp
 
 try:
     # # loads construct.py tasks
+    from plugins.FabFlee.construct import *    
+except ImportError:
     from plugins.FabFlee.construct import *
-    
-except:
+
+    '''
     exc_type, exc_value, exc_traceback = sys.exc_info()
     print("Error: failed to import module construct.py")
     pprint(exc_type)
@@ -30,6 +32,7 @@ except:
     traceback.print_tb(exc_traceback)
     print("The FabFlee construct functionalities are not imported as a result.")
     pass
+    '''
 
 import glob
 import csv
