@@ -17,6 +17,20 @@ try:
 except ImportError:
     import VVP.vvp as vvp
 
+try:
+    # # loads construct.py tasks
+    from plugins.FabFlee.construct import *
+    
+except:
+    exc_type, exc_value, exc_traceback = sys.exc_info()
+    print("Error: failed to import module construct.py")
+    pprint(exc_type)
+    pprint(exc_value)
+    import traceback
+    traceback.print_tb(exc_traceback)
+    print("The FabFlee construct functionalities are not imported as a result.")
+    pass
+
 import glob
 import csv
 import os
@@ -1540,8 +1554,9 @@ except:
     print("The FabFlee run_perf_benchmarks functionalities are not imported as a result.")
     pass
 
+'''
 try:
-    # # loads Validation and Verification Patterns (VVP) tasks
+    # # loads construct.py tasks
     from plugins.FabFlee.construct import clear_active_conflict
     
 except:
@@ -1553,3 +1568,4 @@ except:
     traceback.print_tb(exc_traceback)
     print("The FabFlee construct functionalities are not imported as a result.")
     pass
+'''
